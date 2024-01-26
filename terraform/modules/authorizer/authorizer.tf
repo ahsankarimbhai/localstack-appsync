@@ -77,14 +77,7 @@ resource "aws_iam_role_policy" "authorizer" {
             "dynamodb:UpdateItem"
           ],
           "Resource": [
-            "${var.tenants_table_arn}",
-            "${var.tenants_table_arn}/index/*",
-            "${var.tenants_config_table_arn}",
-            "${var.tenants_config_table_arn}/index/*",
-            "${var.scheduled_task_arn}",
-            "${var.scheduled_task_arn}/index/*",
-            "${var.scheduled_task_metadata_arn}",
-            "${var.scheduled_task_metadata_arn}/index/*"
+            "*"
           ]
         }
       ]

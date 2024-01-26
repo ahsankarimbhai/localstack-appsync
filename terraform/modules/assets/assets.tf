@@ -61,18 +61,7 @@ resource "aws_iam_role_policy" "assets_api" {
           "dynamodb:Scan"
         ],
         "Resource" : [
-          "${var.os_versions_table_arn}",
-          "${var.groups_table_arn}",
-          "${var.groups_table_arn}/index/*",
-          "${var.policy_table_arn}",
-          "${var.policy_table_arn}/index/*",
-          "${var.tenants_table_arn}",
-          "${var.tenants_table_arn}/index/*",
-          "${var.tenant_config_arn}",
-          "${var.tenant_config_arn}/index/*",
-          "${var.vulnerability_table_arn}",
-          "${var.label_metadata_arn}",
-          "${var.neptune_shard_table_arn}"
+          "*"
         ]
       },
       {

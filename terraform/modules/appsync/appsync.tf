@@ -1,10 +1,6 @@
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
-# data "aws_ssm_parameter" "cwl_stream_lambda_arn" {
-#   name = "/${var.systems_manager_prefix}-${var.env}/cwl-stream-lambda-arn"
-# }
-
 locals {
   appsync_name                         = "${var.name_prefix}-appsync"
   appsync_api_gateway_name             = "${var.name_prefix}-appsync-api-gateway"
@@ -89,13 +85,6 @@ resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/appsync/apis/${aws_appsync_graphql_api.graphql_api.id}"
   retention_in_days = 30
 }
-
-# resource "aws_cloudwatch_log_subscription_filter" "subscription_filter" {
-#   name            = "${local.appsync_name}-logs-to-elasticsearch"
-#   log_group_name  = aws_cloudwatch_log_group.log_group.name
-#   filter_pattern  = ""
-#   destination_arn = data.aws_ssm_parameter.cwl_stream_lambda_arn.value
-# }
 
 resource "aws_api_gateway_method" "appsync_api_gateway_post" {
   rest_api_id          = var.api_gateway.id
