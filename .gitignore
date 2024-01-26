@@ -1,0 +1,25 @@
+# Dependency directories
+node_modules/
+
+# OS-specific
+.DS_Store
+
+# Tools and build results
+.idea
+.vscode/
+build/
+gen/
+cypress/
+*.log
+/public/
+backend/.env*
+
+# Terraform
+**/.terraform
+**/*.tfstate.backup
+**/.terraform.tfstate.lock.info
+**/.terraform.lock.hcl
+**/*.tfstate
+
+# Local Stack
+terraform/volume

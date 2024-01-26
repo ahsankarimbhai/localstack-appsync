@@ -1,0 +1,912 @@
+﻿schema {
+  mutation: Mutation
+  query: Query
+}
+
+type Mutation {
+  triggerFetchDataFromProducer(producerType: ProducerType!, producerId: String!): Boolean
+  addProducerConfiguration(input: AddProducerConfigurationInput): ProducerConfiguration
+  removeProducerConfiguration(producerType: ProducerType!, producerId: String!): Boolean
+  updateProducerConfiguration(input: UpdateProducerConfigurationInput): ProducerConfiguration
+  registerWebhooks(producerType: ProducerType!, producerId: String!): Boolean
+  deleteWebhooks(producerType: ProducerType!, producerId: String!): Boolean
+  triggerLiveDeviceDetails(deviceId: String!, producerType: ProducerType!, producerId: String!): String
+  addFilter(filter: FilterInput!): Filter
+  deleteFilter(name: String!): Boolean
+  enableSXOrganization: String
+  moveDevicesToDeployment(devices: [UnifiedConnectorDeviceInput!]!, deploymentId: String!): UnifiedConnectorMoveDevicesResponse
+  createLabel(label: CreateLabelInput!): LabelMetadata
+  updateLabels(labels: [LabelMetadataInput]!): UpdateLabelsResponse
+  deleteLabels(labelIds: [String]!): DeleteLabelsResponse
+  addLabelsForDevices(labelIds: [String]!, deviceIds: [String]!): FailuresResponse
+  removeLabelsForDevices(labelIds: [String]!, deviceIds: [String]!): FailuresResponse
+  addLabelsForAFilter(labelIds: [String]!, filter: PostureDeviceFilterInput!, exclusionList: [String]): FailuresResponse
+  removeLabelsForAFilter(labelIds: [String]!, filter: PostureDeviceFilterInput!, exclusionList: [String]): FailuresResponse
+  setDevicesFinancialRiskFactor(financialRiskFactor: Int!, deviceIds: [String]!): FailuresResponse
+  deleteDevicesFinancialRiskFactor(deviceIds: [String]!): FailuresResponse
+  setDevicesFinancialRiskFactorWithFilter(financialRiskFactor: Int!, filter: PostureDeviceFilterInput!, exclusionList: [String]): FailuresResponse
+  removeDevicesFinancialRiskFactorWithFilter(filter: PostureDeviceFilterInput!, exclusionList: [String]): FailuresResponse
+  setDevicesAssetValue(assetValue: Int!, deviceIds: [String]!): FailuresResponse
+  deleteDevicesAssetValue(deviceIds: [String]!): FailuresResponse
+  setDevicesAssetValueWithFilter(assetValue: Int!, filter: PostureDeviceFilterInput!, exclusionList: [String]): FailuresResponse
+  removeDevicesAssetValueWithFilter(filter: PostureDeviceFilterInput!, exclusionList: [String]): FailuresResponse
+  createRule(rule: CreateRuleInput): RuleManagementResponse
+  updateRule(rule: RuleInput): RuleManagementResponse
+  deleteRule(ruleId: String): Boolean
+}
+
+type Query {
+  #  Get a single posture device by id.
+  getPostureDevice(id: ID!): PostureDevice
+  #  Get a single posture person by id.
+  getPosturePerson(id: ID!): PosturePerson
+  #  Get person filter choices (property ranges)
+  getPosturePersonsFilterChoices(filter: PosturePersonFilterInput, properties: [String!]!, limit: Int): PersonFilterChoices
+  #  Paginate through posture devices.
+  listPostureDevices(filter: PostureDeviceFilterInput): [PostureDevice]
+  #  Paginate through posture persons.
+  listPosturePersons(filter: PosturePersonFilterInput): [PosturePerson]
+  exportPostureDevicesScroll(filter: PostureDeviceFilterInput, scrollId: String): PostureDeviceExportConnectionScroll
+  exportPosturePersonsScroll(filter: PosturePersonFilterInput, scrollId: String): PosturePersonExportConnectionScroll
+  countPostureDevices(filter: PostureDeviceFilterInput): FilteredCounts
+  countPosturePersons(filter: PosturePersonFilterInput): FilteredPersonCounts
+  dashboardCounts: DashboardCounts
+  dashboardPersonCounts: DashboardPersonCounts
+  getUserEndpoints(type: UserType!, value: String!): PostureUser
+  testFetchDataFromProducer(producerType: ProducerType!, producerId: String!): Int
+  testFetchDataFromProducers(producers: [ProducerInput]): [ProducerTestOutput]
+  getWebhooksStatus(producerType: ProducerType!, producerId: String!): WebhookStatus
+  getProducerConfigurations: [ProducerConfiguration]
+  getJsonSchemas: [JsonSchema]
+  getCollectionErrors: [CollectionError]
+  collectionMetrics(daysAgo: Int = 7, producers: [ProducerInput], workflows: [Workflow]): [WorkflowMetrics]!
+  listPostureEndpointsHistoricalState(filter: HistoricalPostureDeviceFilterInput): PostureEndpointsHistoricalStateConnection
+  listPosturePersonsHistoricalState(filter: HistoricalPosturePersonFilterInput): PosturePersonsHistoricalStateConnection
+  getTenantGroups(filter: String): [ProducerGroup]
+  getTenantPolicies(filter: String): [ProducerPolicy]
+  getTenantTags: [ProducerTag]
+  getTenantUCDeployments(producerIds: [String]): [UnifiedConnectorDeploymentsSummary]
+  systemStatus: [KeyValuePair]
+  getTenantMetadata: TenantMetadata
+  isSXOrganizationEnabled(organizationId: String!): Boolean
+  getTenantSetupStatus: TenantSetupStatusType
+  getLiveDeviceTaskDetails(taskId: String!): TaskDetails
+  getPostureEndpointMergingLogic(id: ID!): PostureDeviceMergingLogic
+  getModuleTypeId(source: ProducerType!): String
+  getLabels: [LabelMetadata]
+  getRules: [GetRuleOutputWithCount]
+}
+
+type UnifiedConnectorDeploymentsSummary {
+  producerId: String!
+  deployments: [UnifiedConnectorDeploymentSummary]
+}
+
+type UnifiedConnectorDeploymentSummary {
+  id: String
+  name: String
+  products: [String]
+}
+
+type FilteredCounts {
+  total: Int!
+  producerId: [LabelPair]
+  policyId: [LabelPair]
+  groupId: [LabelPair]
+  tagName: [LabelPair]
+  osType: [LabelPair]
+  endpointType: [LabelPair]
+  hasFaults: [LabelPair]
+  avDefinitionsOutOfDate: [LabelPair]
+  isManaged: [LabelPair]
+  deploymentId: [LabelPair]
+  windowsType: [LabelPair]
+  cloudMgmtVersionOutOfDate: Int
+  inactive: Int
+  financialRiskFactor: [LabelPair]
+  assetValue: [LabelPair]
+  labels: [LabelPair]
+}
+
+type FilteredPersonCounts {
+  total: Int!
+  groupsTotal: Int!
+  producerId: [LabelPair]
+  personType: [LabelPair]
+  assetValue: [LabelPair]
+  labels: [LabelPair]
+}
+
+type PersonFilterChoices {
+  businessPhones: [LabelPair]
+  companyName: [LabelPair]
+  department: [LabelPair]
+  displayName: [LabelPair]
+  emails: [LabelPair]
+  employeeId: [LabelPair]
+  givenName: [LabelPair]
+  groupNames: [LabelPair]
+  groupDescriptions: [LabelPair]
+  jobTitle: [LabelPair]
+  mailNickname: [LabelPair]
+  manager: [LabelPair]
+  mobilePhones: [LabelPair]
+  officeLocation: [LabelPair]
+  ownedDevices: [LabelPair]
+  usedDevices: [LabelPair]
+  personType: [LabelPair]
+  surname: [LabelPair]
+  usageLocation: [LabelPair]
+  users: [LabelPair]
+  windowsSID: [LabelPair]
+}
+
+type PostureDeviceMergingLogicIdentifier {
+  unreliable: Boolean!
+  ivType: String!
+  value: String!
+  producers: [Producer]
+}
+
+type PostureDeviceMergingLogic {
+  identifiers: [PostureDeviceMergingLogicIdentifier]
+}
+
+type CollectionError {
+  producerType: ProducerType!
+  producerId: String!
+  collectionError: String!
+}
+
+type Filter {
+  name: String!
+  definition: String!
+}
+
+input FilterInput {
+  name: String!
+  definition: String!
+}
+
+type TenantMetadata {
+  id: String!
+  featureFlags: [String]
+  filters: [Filter]
+}
+
+type ProducerPolicy {
+  id: String!
+  name: String!
+  source: ProducerType!
+  sourceId: String!
+  description: String
+  isDefault: Boolean
+}
+
+type ProducerGroup {
+  id: String!
+  name: String!
+  source: ProducerType!
+  sourceId: String!
+  description: String
+}
+
+type ProducerTag {
+  name: String!
+  sources: [ProducerTagSource]!
+}
+
+type ProducerTagSource {
+  type: ProducerType!
+  producerId: String!
+}
+
+type PostureEndpointsHistoricalStateConnection {
+  hasNextPage: Boolean!
+  states: [[PostureDevice]]!
+}
+
+type PosturePersonsHistoricalStateConnection {
+  hasNextPage: Boolean!
+  states: [[PosturePerson]]!
+}
+
+input OrderBy {
+  name: String!
+  order: String
+}
+
+input HistoricalPostureDeviceFilterInput {
+  pageNumber: Int
+  pageSize: Int
+  since: Int! # in seconds
+  until: Int! # in seconds
+  searchTypes: [HistoricalPostureDeviceFilterSearchType]!
+}
+
+input HistoricalPostureDeviceFilterSearchType {
+  type: HistoricalPostureDeviceFilterType!
+  value: String!
+}
+
+enum HistoricalPostureDeviceFilterType {
+  internalIpAddress
+  externalIpAddress
+}
+
+input HistoricalPosturePersonFilterInput {
+  pageNumber: Int
+  pageSize: Int
+  since: Int! # in seconds
+  until: Int! # in seconds
+  searchTypes: [HistoricalPosturePersonFilterSearchType]!
+}
+
+input HistoricalPosturePersonFilterSearchType {
+  type: HistoricalPosturePersonFilterType!
+  value: String!
+}
+
+enum HistoricalPosturePersonFilterType {
+  internalIpAddress
+  externalIpAddress
+}
+
+enum TenantSetupStatusType {
+  not_setup
+  setting_up
+  set_up
+}
+
+input UpdateProducerConfigurationInput {
+  producerType: ProducerType!
+  producerId: String!
+  name: String!
+  description: String
+  cronSchedule: String
+  properties: [KeyValuePairInput]!
+}
+
+input AddProducerConfigurationInput {
+  producerType: ProducerType!
+  name: String!
+  description: String
+  cronSchedule: String
+  properties: [KeyValuePairInput]
+}
+
+input ProducerInput {
+  producerType: ProducerType!
+  producerId: String!
+}
+
+type ProducerTestOutput {
+  producerType: ProducerType!
+  producerId: String!
+  result: Int!
+}
+
+type TaskDetails {
+  status: String!
+  errorMessage: String
+}
+
+type ProducerConfiguration {
+  producerType: ProducerType!
+  producerId: String!
+  name: String!
+  irohModuleInstanceId: String
+  description: String
+  cronSchedule: String
+  properties: [KeyValuePair]
+}
+
+type JsonSchema {
+  producerType: String!
+  error: String
+  schema: String
+}
+
+type PostureUser {
+  properties: [KeyValuePair]
+  endpoints: [PostureDevice]!
+}
+
+type DashboardCounts {
+  osTypes: [LabelPair]
+  isManaged: [CountPair]
+  compliant: [LabelPair]
+  endpointTypes: [LabelPair]
+}
+
+type DashboardPersonCounts {
+  personTypes: [LabelPair]
+}
+
+type CountPair {
+  value: Boolean!
+  count: Int!
+}
+
+type LabelPair {
+  value: String!
+  count: Int!
+}
+
+input KeyValuePairInput {
+  key: String!
+  value: String!
+}
+
+type KeyValuePair {
+  key: String!
+  value: String!
+}
+
+type KeyNumericValuePair {
+  key: String!
+  value: Int!
+}
+
+type Producer {
+  type: ProducerType!
+  producerId: String
+  uid: String!
+  properties: [KeyValuePair]
+}
+
+enum OsSupport {
+  eol, outOfDate, preRelease
+}
+
+type PostureDeviceExportConnectionScroll {
+  mergedEndpoints: [PostureDevice]!
+  scrollId: String
+}
+
+type PosturePersonExportConnectionScroll {
+  mergedPersons: [PosturePerson]!
+  scrollId: String
+}
+
+type PostureDevice {
+  #  the internal id
+  uid: String!
+  producers: [Producer]!
+  osType: String
+  osVersion: String
+  osSupport: OsSupport
+  isCompromised: Boolean
+  hardwareId: String
+  serialNumber: String
+  macAddresses: [String]
+  externalIpAddresses: [String]
+  internalIpAddresses: [String]
+  systemModel: String
+  isManaged: Boolean
+  isCompliant: Boolean
+  users: [String]
+  appUsers: [String]
+  emails: [String]
+  owners: [String]
+  isEncrypted: Boolean
+  jailBroken: Boolean
+  isSupervised: Boolean
+  androidSecurityPatchLevel: String
+  tampered: String
+  hostname: String
+  lastUpdated: String
+  since: Int
+  until: Int
+  endpointType: EndpointType
+  hasFaults: Boolean
+  avDefinitionsOutOfDate: Boolean
+  policies: [SlimPolicy]
+  groups: [SlimGroup]
+  tags: [SlimTag]
+  ucId: String
+  acUdId: String
+  cscVersion: String
+  secureEndpointVersion: String
+  cloudMgmtVersion: String
+  modules: [String]
+  deploymentId: String
+  deploymentName: String
+  wantedDeploymentId: String
+  wantedDeploymentName: String
+  labels: [LabelMetadata]
+  financialRiskFactor: Int
+  assetValue: Int
+  effectiveAssetValueWithOrigin: AssetValue
+  values: Int
+}
+
+type PosturePerson {
+  #  the internal id
+  uid: String!
+  producers: [Producer]!
+  externalIpAddresses: [String]
+  internalIpAddresses: [String]
+  lastUpdated: String
+  since: Int
+  until: Int
+  labels: [LabelMetadata]
+  assetValue: Int
+  # Person specific properties
+  accountEnabled: String
+  blockSignin: String
+  businessPhones: [String]
+  companyName: String
+  createdDateTime: String
+  deletedDateTime: String
+  department: String
+  displayName: String
+  emails: [String]
+  employeeId: String
+  employeeHireDateTime: String
+  employeeLeaveDateTime: String
+  givenName: String
+  groupNames: [String]
+  groupDescriptions: [String]
+  jobTitle: String
+  lastSignInDateTime: String
+  mailNickname: String
+  manager: String
+  mobilePhones: [String]
+  officeLocation: String
+  ownedDevices: [OwnedDevice]
+  usedDevices: [UsedDevice]
+  passwordPolicies: String
+  personType: String
+  surname: String
+  usageLocation: String
+  users: [String]
+  windowsSID: [String]
+}
+
+type OwnedDevice {
+  displayName: String
+  lastSignInDateTime: String
+  manufacturer: String
+  model: String
+  operatingSystem: String
+  operatingSystemVersion: String
+  osType: String
+}
+
+type UsedDevice {
+  displayName: String
+  lastSignInDateTime: String
+  manufacturer: String
+  model: String
+  operatingSystem: String
+  operatingSystemVersion: String
+  osType: String
+}
+
+type SlimPolicy {
+  uid: String
+  type: String
+  producerId: String
+}
+
+type SlimGroup {
+  uid: String
+  type: String
+  producerId: String
+}
+
+type SlimTag {
+  name: String
+  sources: [SlimTagSources]
+}
+
+type SlimTagSources {
+  type: String
+  producerId: String
+}
+
+enum OsType {
+  windows
+  macOS
+  android
+  networkGateway
+  iOS
+  iPadOS
+  centos
+  rhel
+  ubuntu
+  oracle
+  emailSecurityAppliance
+  webSecurityAppliance
+  unknown
+}
+
+enum ProducerType {
+  Duo
+  DuoUsers
+  AMP
+  JAMF
+  InTune
+  Meraki
+  Orbital
+  Custom
+  Umbrella
+  MobileIron
+  UnifiedConnector
+  AirWatch
+  ServiceNow
+  SentinelOne
+  CyberVision
+  CrowdStrike
+  Defender
+  AzureUsers
+  TrendVisionOne
+  Cortex
+}
+
+enum UserType {
+  email
+  user
+  appUser
+  owner
+}
+
+input ProducerInfo {
+  type: ProducerType!
+  producerId: String!
+  assetValue: String
+  exclude: Boolean
+}
+
+input PolicyInfo {
+  type: ProducerType
+  producerId: String
+  policyId: String
+  exclude: Boolean
+}
+
+input GroupInfo {
+  type: ProducerType
+  producerId: String
+  groupId: String
+  exclude: Boolean
+}
+
+input TagInfo {
+  name: String
+  type: String
+  producerId: String
+  exclude: Boolean
+}
+
+input DeploymentInfo {
+  deploymentId: String!
+  exclude: Boolean
+}
+
+enum EndpointType {
+  server, Desktop, Virtual, Mobile
+}
+
+enum PersonType {
+  Member, Guest, Admin
+}
+
+enum AccountStatus {
+  Enabled, Disabled
+}
+
+enum AssetValueOrigin {
+  default, manual, rules
+}
+
+input LabelInfo {
+  labelId: String!
+  exclude: Boolean
+}
+
+input FinancialRiskFactorInput {
+  noValue: Boolean
+  values: [Int]
+}
+
+input AssetValueInput {
+  noValue: Boolean
+  values: [Int]
+  origin: AssetValueOrigin
+}
+
+input PostureDeviceFilterInput {
+  pageNumber: Int
+  pageSize: Int
+  producers: [ProducerInfo]
+  policies: [PolicyInfo]
+  groups: [GroupInfo]
+  tags: [TagInfo]
+  osTypes: [OsType]
+  compliant: [String]
+  isManaged: [Boolean]
+  freeText: String
+  luceneQuery: String
+  endpointType: [EndpointType]
+  orderBy: [OrderBy]
+  osSupport: [OsSupport]
+  hasFaults: Boolean
+  avDefinitionsOutOfDate: Boolean
+  deployments: [DeploymentInfo]
+  inactive: Boolean
+  cloudMgmtVersionOutOfDate: Boolean
+  labels: [LabelInfo]
+  financialRiskFactor: FinancialRiskFactorInput
+  assetValue: AssetValueInput
+  values: [Int]
+}
+
+input PosturePersonFilterInput {
+  pageNumber: Int
+  pageSize: Int
+  producers: [ProducerInfo]
+  freeText: String
+  personType: [PersonType]
+  company: [String]
+  officeLocation: [String]
+  department: [String]
+  manager: [String]
+  jobTitle: [String]
+  groups: [String]
+  lastLogonStart: String
+  lastLogonEnd: String
+  lastActiveStart: String
+  lastActiveEnd: String
+  accountCreatedStart: String
+  accountCreatedEnd: String
+  accountStatus: [AccountStatus]
+  usedDevices: [String]
+  ownedDevices: [String]
+  luceneQuery: String
+  orderBy: [OrderBy]
+  labels: [LabelInfo]
+  assetValue: AssetValueInput
+}
+
+type WorkflowMetrics {
+  producer: String!
+  workflow: Workflow!
+  started: String
+  durationInSec: Int,
+  metrics: [KeyNumericValuePair]
+}
+
+type WebhookStatus {
+  producer: String!
+  laststatus: String
+  lastcalled: String
+  expiry: Int
+  error: String
+  errorExtraData: String
+  hasRegisteredWebhooks: Boolean
+}
+
+enum Workflow {
+  collection,
+  notificationProcessing
+}
+
+type UnifiedConnectorDevice {
+  uid: String!
+  ucId: String!
+  producerId: String!
+}
+
+input UnifiedConnectorDeviceInput {
+  uid: String!
+  ucId: String!
+  producerId: String!
+}
+
+type UnifiedConnectorMoveDevicesResponse {
+  success: [UnifiedConnectorMoveDevicesResponseSuccess]!
+  failure: [UnifiedConnectorMoveDevicesResponseFailure]!
+}
+
+type UnifiedConnectorMoveDevicesResponseSuccess {
+  device: UnifiedConnectorDevice!
+}
+
+type UnifiedConnectorMoveDevicesResponseFailure {
+  device: UnifiedConnectorDevice!
+  error: String!
+}
+
+type UpdateLabelsResponse {
+  success: [UpdateLabelResponseSuccess]!
+  failure: [UpdateLabelResponseFailure]!
+}
+
+type UpdateLabelResponseSuccess {
+  label: LabelMetadata!
+}
+
+type UpdateLabelResponseFailure {
+  label: LabelMetadata!
+  error: String!
+}
+
+type DeleteLabelsResponse {
+  success: [String]!
+  failure: [LabelIdToErrorResponse]!
+}
+
+type LabelIdToErrorResponse {
+  labelId: ID!
+  error: String!
+}
+
+type LabelMetadata {
+  labelId: ID
+  name: String
+  color: String
+  textColor: String
+  origin: String
+  linkedRules: [RuleIdName]
+}
+
+type RuleIdName {
+  ruleId: String!
+  ruleName: String!
+}
+
+type AssetValue {
+  value: Int
+  origin: String
+}
+
+type FailuresResponse {
+  failure: [String]
+  failuresWithDetails: [FailureResponseDetails]
+}
+
+type FailureResponseDetails {
+  deviceId: String!
+  failure: String!
+  labelIds: [String]
+}
+
+input CreateLabelInput {
+  name: String
+  color: String
+}
+
+input LabelMetadataInput {
+  labelId: ID
+  name: String
+  color: String
+}
+
+input CreateRuleInput {
+  name: String!
+  description: String
+  matchingCondition: PostureDeviceFilterInput!
+  actionToTake: ActionToTakeInput!
+}
+
+input RuleInput {
+  ruleId: String!
+  name: String!
+  description: String
+  matchingCondition: PostureDeviceFilterInput!
+  actionToTake: ActionToTakeInput!
+  enabled: Boolean!
+}
+
+input ActionToTakeInput {
+  addLabels:[String],
+  setAssetValue: Int
+}
+
+type RuleManagementResponse {
+  rule: RuleOutput
+  error: String
+}
+
+type GetRuleOutputWithCount {
+  rule: RuleOutput
+  count: Int
+}
+
+type RuleOutput {
+  ruleId: String!
+  name: String!
+  description: String
+  matchingCondition: PostureDeviceFilterOutput!
+  actionToTake: ActionToTakeOutput!
+  origin: String
+  enabled: Boolean!
+  systemModified: [String]
+}
+
+type ActionToTakeOutput {
+  addLabels:[String],
+  setAssetValue: Int
+}
+
+type PostureDeviceFilterOutput {
+  pageNumber: Int
+  pageSize: Int
+  producers: [ProducerInfoOutput]
+  policies: [PolicyInfoOutput]
+  groups: [GroupInfoOutput]
+  tags: [TagInfoOutput]
+  osTypes: [OsType]
+  compliant: [String]
+  isManaged: [Boolean]
+  freeText: String
+  luceneQuery: String
+  endpointType: [EndpointType]
+  orderBy: [OrderByOutput]
+  osSupport: [OsSupport]
+  hasFaults: Boolean
+  avDefinitionsOutOfDate: Boolean
+  deployments: [DeploymentInfoOutput]
+  inactive: Boolean
+  cloudMgmtVersionOutOfDate: Boolean
+  labels: [LabelInfoOutput]
+  financialRiskFactor: FinancialRiskFactorOutput
+  assetValue: AssetValueOutput
+  values: [Int]
+}
+
+type ProducerInfoOutput {
+  type: ProducerType!
+  producerId: String!
+  assetValue: String
+  exclude: Boolean
+}
+
+type PolicyInfoOutput {
+  type: ProducerType
+  producerId: String
+  policyId: String
+  exclude: Boolean
+}
+
+type GroupInfoOutput {
+  type: ProducerType
+  producerId: String
+  groupId: String
+  exclude: Boolean
+}
+
+type TagInfoOutput {
+  type: ProducerType
+  producerId: String
+  name: String
+  exclude: Boolean
+}
+
+type OrderByOutput {
+  name: String!
+  order: String
+}
+
+type DeploymentInfoOutput {
+  deploymentId: String!
+  exclude: Boolean
+}
+
+type LabelInfoOutput {
+  labelId: String!
+  exclude: Boolean
+}
+
+type FinancialRiskFactorOutput {
+  noValue: Boolean
+  values: [Int]
+}
+
+type AssetValueOutput {
+  noValue: Boolean
+  values: [Int]
+  origin: AssetValueOrigin
+}

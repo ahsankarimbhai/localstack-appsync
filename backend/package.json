@@ -1,0 +1,25 @@
+{
+  "name": "@cisco-posaas/backend",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "tsc": "yarn clean; ttsc",
+    "clean": "rm -Rf dist",
+    "zip:graphql": "(cd dist; zip -rXq graphql src/*)",
+    "zip:done": "echo Done",
+    "zip": "yarn tsc ; npm-run-all zip:* --silent"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.202",
+    "@ovos-media/ts-transform-paths": "1.7.18-1",
+    "npm-run-all": "4.1.5",
+    "ts-node": "10.9.2",
+    "ttypescript": "1.5.15",
+    "typescript": "4.7.4"
+  },
+  "dependencies": {
+    "@types/node": "20.10.7",
+    "lodash": "4.17.21"
+  }
+}

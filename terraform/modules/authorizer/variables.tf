@@ -1,0 +1,38 @@
+variable "name_prefix" { type = string }
+variable "env" { type = string }
+variable "authorizer_name" { type = string }
+variable "authorizer_type" { type = string }
+variable "nodejs_runtime" { type = string }
+variable "lambda_layer_arn" { type = string }
+variable "iroh_uri" { type = string }
+variable "iroh_redirect_uri" { type = string }
+variable "systems_manager_prefix" { type = string }
+variable "tenants_table_arn" { type = string }
+variable "tenants_config_table_arn" { type = string }
+variable "scheduled_task_arn" { type = string }
+variable "scheduled_task_metadata_arn" { type = string }
+variable "api_allowed_client_ids" { type = string }
+variable "dynamodb_request_timeout_milliseconds" { type = number }
+variable "reserved_concurrency" {
+  type    = number
+  default = -1
+}
+variable "provisioned_concurrency" {
+  type    = number
+  default = 0
+}
+variable "api_gateway" {
+  type = object({
+    id  = string
+    arn = string
+  })
+}
+variable "lambda" {
+  type = object({
+    type                           = string
+    handler                        = string
+    timeout                        = number
+    use_iroh_jwks_uri              = bool
+    use_attempt_timeout_for_aws_sm = bool
+  })
+}

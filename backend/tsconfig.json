@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "outDir": "dist/src",
+    "baseUrl": "./",
+    "target": "es2019",
+    "module": "commonjs",
+    "lib": [
+      "es2019",
+      "es2020.string",
+      "es2020.symbol.wellknown",
+      "es2020.promise"
+    ],
+    "strict": true,
+    "noImplicitAny": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "transform": "@ovos-media/ts-transform-paths",
+        "afterDeclarations": true
+      }
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

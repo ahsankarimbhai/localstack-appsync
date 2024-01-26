@@ -1,0 +1,9 @@
+variable "name_prefix" { type = string }
+variable "should_create_cloudfront_endpoint" { type = bool }
+variable "is_local_dev_env" { type = bool }
+variable "cloudfront_domain" { type = string }
+variable "cloudfront_apps_subdomain" { type = string }
+variable "cloudfront_apps_acm_cert_domain" { type = string }
+variable "public_hosted_zone" { type = string }
+variable "s3_bucket_tags" { type = map(string) }
+variable "s3_bucket_env" { type = string }
