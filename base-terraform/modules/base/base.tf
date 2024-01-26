@@ -310,18 +310,18 @@ resource "aws_security_group" "vpc_endpoint" {
   }
 }
 
-# module "interface_vpc_endpoints" {
-#   for_each           = toset(var.interface_vpc_endpoint_config)
-#   source             = "../interface-vpc-endpoint"
-#   base_name          = var.base_name
-#   vpc_id             = aws_vpc.vpc.id
-#   service_name       = each.key
-#   security_group_ids = [aws_security_group.vpc_endpoint.id]
-#   subnet_ids = [
-#     for key in keys(var.subnet_config) :
-#     module.private_endpoints_subnets[key].subnet_id
-#   ]
-# }
+module "interface_vpc_endpoints" {
+  for_each           = toset(var.interface_vpc_endpoint_config)
+  source             = "../interface-vpc-endpoint"
+  base_name          = var.base_name
+  vpc_id             = aws_vpc.vpc.id
+  service_name       = each.key
+  security_group_ids = [aws_security_group.vpc_endpoint.id]
+  subnet_ids = [
+    for key in keys(var.subnet_config) :
+    module.private_endpoints_subnets[key].subnet_id
+  ]
+}
 
 module "gateway_vpc_endpoints" {
   for_each       = toset(var.gateway_vpc_endpoint_config)

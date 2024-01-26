@@ -6,7 +6,9 @@
   "scripts": {
     "tsc": "yarn clean; ttsc",
     "clean": "rm -Rf dist",
+    "zip:layer": "mkdir -p dist; cd dist; cp ../package.json .; yarn install --pure-lockfile --prod --modules-folder nodejs/node_modules; (find nodejs -exec touch -t 202001181205.09 {} \\;; zip -rXq layer nodejs/*)",
     "zip:graphql": "(cd dist; zip -rXq graphql src/*)",
+    "zip:authorizer": "(cd dist; zip -rXq authorizer src/authorizer)",
     "zip:done": "echo Done",
     "zip": "yarn tsc ; npm-run-all zip:* --silent"
   },

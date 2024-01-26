@@ -63,14 +63,6 @@ module "common_node_modules_lambda_layer" {
   lambda_layer_full_path = "${path.module}/../backend/dist/layer.zip"
 }
 
-module "dynamodb-tables" {
-  source                                          = "./modules/dynamodb-tables"
-  global_iroh_module_type_id                      = var.global_iroh_module_type_id
-  name_prefix                                     = local.name_prefix
-  dynamodb_schedule_tasks_additional_config       = var.dynamodb_schedule_tasks_additional_config
-  dynamodb_data_migration_tasks_additional_config = var.dynamodb_data_migration_tasks_additional_config
-}
-
 module "api_gateway" {
   source                    = "./modules/api-gateway"
   name_prefix               = local.name_prefix
@@ -87,8 +79,6 @@ module "authorizer" {
   nodejs_runtime                        = local.nodejs_runtime
   api_gateway                           = module.api_gateway.api_gateway
   lambda_layer_arn                      = module.common_node_modules_lambda_layer.lambda_layer_arn
-  tenants_table_arn                     = module.dynamodb-tables.tenants_table_arn
-  tenants_config_table_arn              = module.dynamodb-tables.tenants_config_table_arn
   authorizer_name                       = each.value.name
   authorizer_type                       = each.value.type
   lambda                                = each.value.lambda
@@ -121,24 +111,9 @@ module "graphql-api" {
   dynamodb_request_timeout_milliseconds    = 10000
   metric_period_in_days                    = var.metric_period_in_days
   lambda_layer_arn                         = module.common_node_modules_lambda_layer.lambda_layer_arn
-  tenants_config_table_arn                 = module.dynamodb-tables.tenants_config_table_arn
-  tenants_table_arn                        = module.dynamodb-tables.tenants_table_arn
   graphql_api_id                           = module.appsync.graphql_api_id
   iam_role_arn                             = module.appsync.iam_role_arn
   api_gateway_endpoint                     = local.api_gateway_endpoint
-}
-
-module "assets" {
-  source                           = "./modules/assets"
-  name_prefix                      = local.name_prefix
-  nodejs_runtime                   = local.nodejs_runtime
-  systems_manager_prefix           = var.base_name
-  env                              = var.env
-  lambda_layer_arn                 = module.common_node_modules_lambda_layer.lambda_layer_arn
-  api_gateway                      = module.api_gateway.api_gateway
-  api_gateway_request_validator_id = module.api_gateway.request_validator_id
-  authorizer_id                    = module.authorizer["api"].authorizer_id
-  iroh_uri                         = var.iroh_env_mapping[var.iroh_env]
 }
 
 module "api_gateway_deployment" {

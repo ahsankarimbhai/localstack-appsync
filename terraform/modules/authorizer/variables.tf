@@ -7,8 +7,6 @@ variable "lambda_layer_arn" { type = string }
 variable "iroh_uri" { type = string }
 variable "iroh_redirect_uri" { type = string }
 variable "systems_manager_prefix" { type = string }
-variable "tenants_table_arn" { type = string }
-variable "tenants_config_table_arn" { type = string }
 variable "api_allowed_client_ids" { type = string }
 variable "dynamodb_request_timeout_milliseconds" { type = number }
 variable "reserved_concurrency" {

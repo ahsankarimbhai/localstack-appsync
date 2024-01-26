@@ -48,10 +48,6 @@ locals {
 
 data "aws_caller_identity" "id" {}
 
-# data "aws_elasticsearch_domain" "domain_endpoint" {
-#   domain_name = "${var.base_name}-search"
-# }
-
 module "base" {
   source                        = "./modules/base"
   combined_subnet_ranges        = var.combined_subnet_ranges
@@ -60,5 +56,4 @@ module "base" {
   region_domain_map             = var.region_domain_map
   service_discovery_hosted_zone = var.service_discovery_hosted_zone
   turn_on_neptune_rebalance     = var.turn_on_neptune_rebalance
-  #bastion_source                = module.bastion_ssm.instance_private_ip
 }
