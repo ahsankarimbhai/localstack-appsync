@@ -78,7 +78,7 @@ resource "aws_iam_role_policy" "assets_api" {
           "neptune-db:*"
         ],
         "Resource" : [
-          for res_id in var.neptune_cluster_resource_ids : "arn:aws:neptune-db:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${res_id}/*"
+          "*"
         ]
       }
     ]
@@ -100,18 +100,6 @@ module "assets" {
   lambda_timeout         = 20
   env                    = var.env
   memory_size            = 512
-  lambda_environment = merge(
-    lookup(each.value, "access_neptune", false) ? {
-      NEPTUNE_CLUSTER_SETTINGS = var.neptune_cluster_settings
-    } : {},
-    {
-      ENV                  = var.env
-      POSTURE_URL          = var.posture_url
-      IROH_URI             = var.iroh_uri
-      IROH_REDIRECT_URI    = var.iroh_redirect_uri
-      EVENT_BRIDGE_BUS_ARN = var.event_bridge_bus_arn
-      RULES_ENABLED        = var.rules_enabled
-  })
 }
 
 module "assets_gw" {

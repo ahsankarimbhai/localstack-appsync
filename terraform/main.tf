@@ -125,36 +125,21 @@ module "graphql-api" {
   tenants_table_arn                        = module.dynamodb-tables.tenants_table_arn
   graphql_api_id                           = module.appsync.graphql_api_id
   iam_role_arn                             = module.appsync.iam_role_arn
-  iroh_uri                                 = var.iroh_env_mapping[var.iroh_env]
   api_gateway_endpoint                     = local.api_gateway_endpoint
 }
 
-# module "assets" {
-#   source                           = "./modules/assets"
-#   name_prefix                      = local.name_prefix
-#   nodejs_runtime                   = local.nodejs_runtime
-#   systems_manager_prefix           = var.base_name
-#   env                              = var.env
-#   neptune_cluster_resource_ids     = local.neptune_cluster_resource_ids
-#   neptune_cluster_settings         = data.aws_ssm_parameter.neptune_cluster_settings.value
-#   neptune_shard_table_arn          = module.dynamodb-tables.neptune_shard_table_arn
-#   lambda_layer_arn                 = module.common_node_modules_lambda_layer.lambda_layer_arn
-#   api_gateway                      = module.api_gateway.api_gateway
-#   api_gateway_request_validator_id = module.api_gateway.request_validator_id
-#   posture_url                      = module.frontend.cloudfront_apps_endpoint
-#   authorizer_id                    = module.authorizer["api"].authorizer_id
-#   os_versions_table_arn            = module.dynamodb-tables.os_versions_table_arn
-#   groups_table_arn                 = module.dynamodb-tables.groups_table_arn
-#   policy_table_arn                 = module.dynamodb-tables.policy_table_arn
-#   vulnerability_table_arn          = module.dynamodb-tables.vulnerability_table_arn
-#   tenants_table_arn                = module.dynamodb-tables.tenants_table_arn
-#   tenant_config_arn                = module.dynamodb-tables.tenants_config_table_arn
-#   label_metadata_arn               = module.dynamodb-tables.label_metadata_arn
-#   iroh_uri                         = var.iroh_env_mapping[var.iroh_env]
-#   iroh_redirect_uri                = "${module.frontend.cloudfront_apps_endpoint}/iroh/callback"
-#   event_bridge_bus_arn             = module.event-bridge.event_bridge_bus_arn
-#   rules_enabled                    = var.rules_enabled
-# }
+module "assets" {
+  source                           = "./modules/assets"
+  name_prefix                      = local.name_prefix
+  nodejs_runtime                   = local.nodejs_runtime
+  systems_manager_prefix           = var.base_name
+  env                              = var.env
+  lambda_layer_arn                 = module.common_node_modules_lambda_layer.lambda_layer_arn
+  api_gateway                      = module.api_gateway.api_gateway
+  api_gateway_request_validator_id = module.api_gateway.request_validator_id
+  authorizer_id                    = module.authorizer["api"].authorizer_id
+  iroh_uri                         = var.iroh_env_mapping[var.iroh_env]
+}
 
 module "api_gateway_deployment" {
   source                  = "./modules/api-gateway-deployment"
