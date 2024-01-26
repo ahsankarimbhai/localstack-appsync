@@ -1,5 +1,27 @@
 data "aws_region" "current" {}
 
+resource "aws_route53_zone" "route53_zone" {
+  name = var.public_hosted_zone
+
+  tags = {
+    Name = "${var.base_name}-route53-zone"
+  }
+
+}
+
+resource "aws_acm_certificate" "cert" {
+  domain_name       = var.public_hosted_zone
+  validation_method = "DNS"
+
+  tags = {
+    Environment = "${var.base_name}-acm-certificate"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_vpc" "vpc" {
   cidr_block           = var.combined_subnet_ranges["VPC"]
   enable_dns_hostnames = true

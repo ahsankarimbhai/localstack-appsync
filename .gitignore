@@ -23,4 +23,4 @@ backend/.env*
 **/*.tfstate
 
 # Local Stack
-terraform/volume
+volume

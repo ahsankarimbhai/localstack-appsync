@@ -15,4 +15,7 @@ variable "gateway_vpc_endpoint_config" {
   type    = list(string)
   default = ["s3", "dynamodb"]
 }
-#variable "bastion_source" { type = string }
+variable "public_hosted_zone" {
+  type    = string
+  default = "mypostureservice.name"
+}
