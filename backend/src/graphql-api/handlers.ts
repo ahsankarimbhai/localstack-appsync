@@ -13,7 +13,7 @@
  *     }
  *   }
  */
-export const listPostureDevices = async (event: any) => {
-  console.log('in listPostureDevices');
+export const listGames = async (event: any) => {
+  console.log('in listGames');
   console.log("EVENT\n" + JSON.stringify(event, null, 2))
 };
