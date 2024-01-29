@@ -5,16 +5,16 @@ resource "aws_api_gateway_rest_api" "api_gateway" {
   }
 }
 
-resource "aws_api_gateway_method_settings" "api_post_settings" {
-  rest_api_id = aws_api_gateway_rest_api.api_gateway.id
-  stage_name  = "default"
-  method_path = "api/POST"
+# resource "aws_api_gateway_method_settings" "api_post_settings" {
+#   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+#   #stage_name  = "default"
+#   method_path = "api/POST"
 
-  settings {
-    throttling_burst_limit = 1000
-    throttling_rate_limit  = 500
-  }
-}
+#   settings {
+#     throttling_burst_limit = 1000
+#     throttling_rate_limit  = 500
+#   }
+# }
 
 resource "aws_api_gateway_usage_plan" "graphql_usage_plan" {
   name = "${var.name_prefix}-usage-plan"

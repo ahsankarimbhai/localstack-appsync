@@ -66,7 +66,6 @@ module "common_node_modules_lambda_layer" {
 module "api_gateway" {
   source                    = "./modules/api-gateway"
   name_prefix               = local.name_prefix
-  api_gateway_deployment_id = module.api_gateway_deployment.api_gateway_deployment_id
 }
 
 module "authorizer" {
@@ -114,14 +113,4 @@ module "graphql-api" {
   graphql_api_id                           = module.appsync.graphql_api_id
   iam_role_arn                             = module.appsync.iam_role_arn
   api_gateway_endpoint                     = local.api_gateway_endpoint
-}
-
-module "api_gateway_deployment" {
-  source                  = "./modules/api-gateway-deployment"
-  name_prefix             = local.name_prefix
-  public_hosted_zone      = var.public_hosted_zone
-  cert_domain             = var.api_gateway_cert_domain
-  stage_name              = var.api_gateway_stage_name
-  api_gateway_id          = module.api_gateway.api_gateway.id
-  api_gateway_domain_name = local.api_gateway_domain_name
 }
