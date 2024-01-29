@@ -74,18 +74,15 @@ module "authorizer" {
   name_prefix                           = local.name_prefix
   env                                   = var.env
   systems_manager_prefix                = var.base_name
-  iroh_uri                              = var.iroh_env_mapping[var.iroh_env]
   nodejs_runtime                        = local.nodejs_runtime
   api_gateway                           = module.api_gateway.api_gateway
   lambda_layer_arn                      = module.common_node_modules_lambda_layer.lambda_layer_arn
   authorizer_name                       = each.value.name
   authorizer_type                       = each.value.type
   lambda                                = each.value.lambda
-  iroh_redirect_uri                     = ""
   api_allowed_client_ids                = var.authorizer_api_allowed_client_ids
   reserved_concurrency                  = var.authorizer_settings[each.value.name].reserved_concurrency
   provisioned_concurrency               = var.authorizer_settings[each.value.name].provisioned_concurrency
-  dynamodb_request_timeout_milliseconds = 5000
 }
 
 module "appsync" {
@@ -107,8 +104,6 @@ module "graphql-api" {
   systems_manager_prefix                   = var.base_name
   env                                      = var.env
   graphql_api_lambda_timeout               = var.graphql_api_lambda_timeout
-  dynamodb_request_timeout_milliseconds    = 10000
-  metric_period_in_days                    = var.metric_period_in_days
   lambda_layer_arn                         = module.common_node_modules_lambda_layer.lambda_layer_arn
   graphql_api_id                           = module.appsync.graphql_api_id
   iam_role_arn                             = module.appsync.iam_role_arn
