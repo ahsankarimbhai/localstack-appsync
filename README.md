@@ -69,7 +69,7 @@
   4. Go to CloudWatch Logs console and check the logs for Log Group `/aws/lambda/localstack-posaas-graphql-api`. You should see following event object printed:
   ```
   2024-01-29T23:55:22.570Z 2e9628d8-53c2-49fe-a9ab-1e384daf33c1 INFO EVENT { "args": {}, "parent": null, "query": { "fieldName": "listGames", "parentTypeName": "Query", "variables": {}, "selectionSetList": [] }, "identity": "", "request": {} }
-    ```
+  ```
 
   ### Expected Result:
   The request object should NOT be empty in the event object received by Lambda function from AppSync. It should look something like this:
