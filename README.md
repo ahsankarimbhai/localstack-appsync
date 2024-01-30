@@ -67,58 +67,59 @@
       }
       ```
   4. Go to CloudWatch Logs console and check the logs for Log Group `/aws/lambda/localstack-posaas-graphql-api`. You should see following event object printed:
+
     ```
     2024-01-29T23:55:22.570Z 2e9628d8-53c2-49fe-a9ab-1e384daf33c1 INFO EVENT { "args": {}, "parent": null, "query": { "fieldName": "listGames", "parentTypeName": "Query", "variables": {}, "selectionSetList": [] }, "identity": "", "request": {} }
     ```
 
   ### Expected Result:
-    The request object should NOT be empty in the event object received by Lambda function from AppSync. It should look something like this:
-    ```
-      {
-          "args": {}, 
-          "parent": null, 
-          "query": { 
-              "fieldName": "listGames",
-              "parentTypeName": "Query", 
-              "variables": {}, 
-              "selectionSetList": [] 
-          },
-          "identity": {
-              "accountId": "...",
-              "cognitoIdentityAuthProvider": null,
-              "cognitoIdentityAuthType": null,
-              "cognitoIdentityId": null,
-              "cognitoIdentityPoolId": null,
-              ...
-          },
-          "request": {
-              "headers": {
-                  ...
-                  "tenantUid":"b66a29ae-8a6b-4cfd-b753-074413ac7bb2",
-                  "tenantExtId":"9ce278b8-741e-4e43-be13-1bab5c16fc8f",
-                  "tenantName":"QVGVzdGluZyBUZW5hbnQ=",
-                  "role":"admin",
-                  "id":"fe5e4ba6-95ee-4d40-aa80-24921231888c",
-                  "irohToken":"sample_token"
-              },
-              "domainName": null
-          }
-      }
-    ```
+  The request object should NOT be empty in the event object received by Lambda function from AppSync. It should look something like this:
+  ```
+    {
+        "args": {}, 
+        "parent": null, 
+        "query": { 
+            "fieldName": "listGames",
+            "parentTypeName": "Query", 
+            "variables": {}, 
+            "selectionSetList": [] 
+        },
+        "identity": {
+            "accountId": "...",
+            "cognitoIdentityAuthProvider": null,
+            "cognitoIdentityAuthType": null,
+            "cognitoIdentityId": null,
+            "cognitoIdentityPoolId": null,
+            ...
+        },
+        "request": {
+            "headers": {
+                ...
+                "tenantUid":"b66a29ae-8a6b-4cfd-b753-074413ac7bb2",
+                "tenantExtId":"9ce278b8-741e-4e43-be13-1bab5c16fc8f",
+                "tenantName":"QVGVzdGluZyBUZW5hbnQ=",
+                "role":"admin",
+                "id":"fe5e4ba6-95ee-4d40-aa80-24921231888c",
+                "irohToken":"sample_token"
+            },
+            "domainName": null
+        }
+    }
+  ```
 
   ### Actual Result:
-    The request object IS empty in the event object received by Lambda function from AppSync. It looks like this:
-      ```
-        {
-            "args": {},
-            "parent": null,
-            "query": {
-                "fieldName": "listGames",
-                "parentTypeName": "Query",
-                "variables": {},
-                "selectionSetList": []
-            },
-            "identity": "",
-            "request": {}
-        }
-      ```
+  The request object IS empty in the event object received by Lambda function from AppSync. It looks like this:
+    ```
+      {
+          "args": {},
+          "parent": null,
+          "query": {
+              "fieldName": "listGames",
+              "parentTypeName": "Query",
+              "variables": {},
+              "selectionSetList": []
+          },
+          "identity": "",
+          "request": {}
+      }
+    ```
