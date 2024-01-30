@@ -151,9 +151,9 @@ module "graphql_api_lambda" {
   memory_size            = 256
 }
 
-resource "aws_appsync_datasource" "list_posture_endpoints" {
+resource "aws_appsync_datasource" "list_games" {
   api_id           = var.graphql_api_id
-  name             = "listPostureEndpoints"
+  name             = "listGames"
   service_role_arn = var.iam_role_arn
   type             = "AWS_LAMBDA"
 
@@ -162,11 +162,11 @@ resource "aws_appsync_datasource" "list_posture_endpoints" {
   }
 }
 
-resource "aws_appsync_resolver" "list_posture_endpoints" {
+resource "aws_appsync_resolver" "list_games" {
   type        = "Query"
   api_id      = var.graphql_api_id
-  field       = "listPostureDevices"
-  data_source = aws_appsync_datasource.list_posture_endpoints.name
+  field       = "listGames"
+  data_source = aws_appsync_datasource.list_games.name
 
   request_template  = file("${path.module}/../../templates/generic-lambda-request.tpl")
   response_template = file("${path.module}/../../templates/generic-response.tpl")

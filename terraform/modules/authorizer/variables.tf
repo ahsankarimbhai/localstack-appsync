@@ -4,11 +4,8 @@ variable "authorizer_name" { type = string }
 variable "authorizer_type" { type = string }
 variable "nodejs_runtime" { type = string }
 variable "lambda_layer_arn" { type = string }
-variable "iroh_uri" { type = string }
-variable "iroh_redirect_uri" { type = string }
 variable "systems_manager_prefix" { type = string }
 variable "api_allowed_client_ids" { type = string }
-variable "dynamodb_request_timeout_milliseconds" { type = number }
 variable "reserved_concurrency" {
   type    = number
   default = -1

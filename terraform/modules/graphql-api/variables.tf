@@ -7,5 +7,3 @@ variable "graphql_api_id" { type = string }
 variable "iam_role_arn" { type = string }
 variable "api_gateway_endpoint" { type = string }
 variable "graphql_api_lambda_timeout" { type = number }
-variable "dynamodb_request_timeout_milliseconds" { type = number }
-variable "metric_period_in_days" { type = string }

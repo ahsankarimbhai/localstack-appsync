@@ -100,17 +100,6 @@ module "authorizer_lambda" {
   publish                = var.provisioned_concurrency > 0
   lambda_timeout         = lookup(var.lambda, "timeout", 10)
   env                    = var.env
-  lambda_environment = merge(
-    lookup(var.lambda, "use_iroh_jwks_uri", false) ? { IROH_JWKS_URI = "${var.iroh_uri}/.well-known/jwks" } : {},
-    lookup(var.lambda, "use_attempt_timeout_for_aws_sm", false) ? { USE_ATTEMPT_TIMEOUT_FOR_AWS_SM = "true" } : {},
-    lookup(var.lambda, "disable_secret_cache", false) ? { DISABLE_SECRET_CACHE = "true" } : {},
-    {
-      ENV                                   = var.env
-      IROH_URI                              = var.iroh_uri
-      IROH_REDIRECT_URI                     = var.iroh_redirect_uri
-      API_ALLOWED_CLIENT_IDS                = var.api_allowed_client_ids
-      DYNAMODB_REQUEST_TIMEOUT_MILLISECONDS = var.dynamodb_request_timeout_milliseconds
-  })
 }
 
 resource "aws_lambda_alias" "authorizer" {

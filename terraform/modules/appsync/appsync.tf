@@ -141,6 +141,8 @@ resource "aws_api_gateway_integration" "appsync_api_gateway_post" {
   integration_http_method = "POST"
   type                    = "AWS"
   uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:${split("/", aws_appsync_graphql_api.graphql_api.uris["GRAPHQL"])[4]}.appsync-api:path/graphql"
+  # change to following uri when running against real AWS
+  # # uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:${replace(split(".", aws_appsync_graphql_api.graphql_api.uris["GRAPHQL"])[0], "https://", "")}.appsync-api:path/graphql"
   credentials             = aws_iam_role.api_gateway.arn
   passthrough_behavior    = "WHEN_NO_TEMPLATES"
   request_parameters = {

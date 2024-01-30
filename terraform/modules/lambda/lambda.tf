@@ -1,10 +1,10 @@
-data "aws_ssm_parameter" "lambda_subnet_ids" {
-  name = "/${var.systems_manager_prefix}-${var.env}/${var.lambda_type}-tools-subnet-ids"
-}
+# data "aws_ssm_parameter" "lambda_subnet_ids" {
+#   name = "/${var.systems_manager_prefix}-${var.env}/${var.lambda_type}-tools-subnet-ids"
+# }
 
-data "aws_ssm_parameter" "lambda_sg_id" {
-  name = "/${var.systems_manager_prefix}-${var.env}/${var.lambda_type}-lambda-sg-id"
-}
+# data "aws_ssm_parameter" "lambda_sg_id" {
+#   name = "/${var.systems_manager_prefix}-${var.env}/${var.lambda_type}-lambda-sg-id"
+# }
 
 locals {
   full_function_name = "${var.name_prefix}-${var.function_name}"
@@ -23,10 +23,10 @@ resource "aws_lambda_function" "lambda" {
   memory_size                    = var.memory_size
   publish                        = var.publish
 
-  vpc_config {
-    subnet_ids         = split(",", data.aws_ssm_parameter.lambda_subnet_ids.value)
-    security_group_ids = [data.aws_ssm_parameter.lambda_sg_id.value]
-  }
+  # vpc_config {
+  #   subnet_ids         = split(",", data.aws_ssm_parameter.lambda_subnet_ids.value)
+  #   security_group_ids = [data.aws_ssm_parameter.lambda_sg_id.value]
+  # }
 
   environment {
     variables = merge(
