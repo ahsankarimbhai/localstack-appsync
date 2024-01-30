@@ -13,8 +13,8 @@
     yarn
     yarn zip
     cd ../terraform
-    terraform init
-    terraform apply -lock=false -auto-approve -var-file=environments/localstack/variables.tfvars
+    tflocal init
+    tflocal apply -lock=false -auto-approve -var-file=environments/localstack/variables.tfvars
     ```
 
     If you see the following error, just keep re-running the apply command until you see a successful run.
