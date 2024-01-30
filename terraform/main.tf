@@ -1,5 +1,5 @@
+# ENABLE FOLLOWING TO TEST AGAINST REAL AWS
 # terraform {
-#   backend "s3" {}
 #   required_providers {
 #     aws = {
 #       version = "5.29.0"
@@ -8,6 +8,11 @@
 #   }
 # }
 
+# provider "aws" {
+#     region = var.aws_region
+# }
+
+# DISABLE FOLLOWING WHEN TESTING AGAINST REAL AWS
 provider "aws" {
   region = var.aws_region  
   access_key                  = "mock_access_key"
