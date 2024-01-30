@@ -1,5 +1,5 @@
 {
-  "name": "@cisco-posaas/backend",
+  "name": "localstack-appsync",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
