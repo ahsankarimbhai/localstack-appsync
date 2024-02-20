@@ -12,4 +12,5 @@ type GameItem {
   content: String
   attachment: String
   createdAt: String
+  isActive: Boolean
 }
