@@ -74,7 +74,6 @@
   ### Actual Result:
   Correct GraphQL API response should be returned as follows:
 
-      ```
         {
             "data": {
                 "listGames": [
@@ -89,7 +88,7 @@
                 ]
             }
         }
-      ```
+
 
   Also note that above response is also returned when we call the API with APi Gateway URL (for e.g. https;//8s6glhz7gw.execute-api.us-east-1.amazonaws.com/default)
 
