@@ -64,18 +64,16 @@
 
   ### Expected Result:
   Request should be successful with request successfully getting routed with Route53 -> CloudFront -> API Gateway -> AppSync -> Lambda. We should we following response:
- 
     ```
-    {
-        "__type": "InternalError",
-        "message": "exception while calling apigateway with unknown operation: Traceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 556, in parse\n    operation, uri_params = self._operation_router.match(request)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/op_router.py\", line 321, in match\n    rule, args = matcher.match(path, method=method, return_rule=True)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/werkzeug/routing/map.py\", line 624, in match\n    raise NotFound() from None\nwerkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/chain.py\", line 166, in handle\n    handler(self, self.context, response)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/handlers/service.py\", line 62, in __call__\n    return self.parse_and_enrich(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/handlers/service.py\", line 66, in parse_and_enrich\n    operation, instance = parser.parse(context.request)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 171, in wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 558, in parse\n    raise OperationNotFoundParserError(\nlocalstack.aws.protocol.parser.OperationNotFoundParserError: Unable to find operation for request to service apigateway: POST /api\n"
-    }
+        {
+            "__type": "InternalError",
+            "message": "exception while calling apigateway with unknown operation: Traceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 556, in parse\n    operation, uri_params = self._operation_router.match(request)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/op_router.py\", line 321, in match\n    rule, args = matcher.match(path, method=method, return_rule=True)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/werkzeug/routing/map.py\", line 624, in match\n    raise NotFound() from None\nwerkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/chain.py\", line 166, in handle\n    handler(self, self.context, response)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/handlers/service.py\", line 62, in __call__\n    return self.parse_and_enrich(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/handlers/service.py\", line 66, in parse_and_enrich\n    operation, instance = parser.parse(context.request)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 171, in wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 558, in parse\n    raise OperationNotFoundParserError(\nlocalstack.aws.protocol.parser.OperationNotFoundParserError: Unable to find operation for request to service apigateway: POST /api\n"
+        }
     ```
 
   ### Actual Result:
   Correct GraphQL API response should be returned as follows:
-
-      ```
+    ```
         {
             "data": {
                 "listGames": [
@@ -90,7 +88,7 @@
                 ]
             }
         }
-      ```
+    ```
 
   Also note that above response is also returned when we call the API with APi Gateway URL (for e.g. https;//8s6glhz7gw.execute-api.us-east-1.amazonaws.com/default)
 
