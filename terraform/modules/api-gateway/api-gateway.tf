@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 resource "aws_api_gateway_rest_api" "api_gateway" {
   name = var.name_prefix
   endpoint_configuration {
@@ -68,4 +70,12 @@ output "api_gateway_api_resource_id" {
 
 output "request_validator_id" {
   value = aws_api_gateway_request_validator.api_gateway.id
+}
+
+output "api_gateway_execution_arn" {
+  value = aws_api_gateway_rest_api.api_gateway.execution_arn
+}
+
+output "api_gateway_domain" {
+  value = "${aws_api_gateway_rest_api.api_gateway.id}.execute-api.${data.aws_region.current.name}.amazonaws.com"
 }

@@ -9,6 +9,12 @@ terraform {
   }
 }
 
+#cloud front certificates have to be deployed in us-east-1 certificate manager
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us-east-1"
+}
+
 provider "aws" {
     region = var.aws_region
 }
@@ -23,6 +29,27 @@ locals {
   api_gateway_endpoint         = "https://${local.api_gateway_domain_name}"
 }
 
+resource "aws_route53_zone" "route53_zone" {
+  name = var.public_hosted_zone
+
+  tags = {
+    Name = "${var.base_name}-route53-zone"
+  }
+}
+
+resource "aws_acm_certificate" "cert" {
+  domain_name       = var.public_hosted_zone
+  validation_method = "DNS"
+
+  tags = {
+    Environment = "${var.base_name}-acm-certificate"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 module "common_node_modules_lambda_layer" {
   source                 = "./modules/lambda-layer"
   name_prefix            = local.name_prefix
@@ -32,8 +59,37 @@ module "common_node_modules_lambda_layer" {
 }
 
 module "api_gateway" {
-  source                    = "./modules/api-gateway"
-  name_prefix               = local.name_prefix
+  source                            = "./modules/api-gateway"
+  name_prefix                       = local.name_prefix
+  api_gateway_deployment_stage_name = module.api_gateway_deployment.api_gateway_deployment_stage_name
+}
+
+module "api_gateway_deployment" {
+  providers = {
+    aws.alternate = aws.us-east-1
+  }
+  source                     = "./modules/api-gateway-deployment"
+  name_prefix                = local.name_prefix
+  public_hosted_zone         = var.public_hosted_zone
+  route_53_zone_id           = aws_route53_zone.route53_zone.zone_id
+  cert_domain                = var.api_gateway_cert_domain
+  stage_name                 = var.api_gateway_stage_name
+  api_gateway_id             = module.api_gateway.api_gateway.id
+  api_gateway_domain_name    = local.api_gateway_domain_name
+  api_cloudfront_domain_name = module.cloudfront.api_cloudfront_domain_name
+  api_cloudfront_zone_id     = module.cloudfront.api_cloudfront_zone_id
+  depends_on                 = [ module.appsync ]
+}
+
+module "cloudfront" {
+  providers = {
+    aws.alternate = aws.us-east-1
+  }
+  source                  = "./modules/cloudfront"
+  name_prefix             = local.name_prefix
+  api_gateway_domain_name = module.api_gateway.api_gateway_domain
+  cert_arn                = aws_acm_certificate.cert.arn
+  cert_alias              = var.env == "prod" || var.env == "prodapjc" || var.env == "prodeu" ? var.api_gateway_cert_domain : "${local.name_prefix}.${var.api_gateway_cert_domain}"
 }
 
 module "authorizer" {

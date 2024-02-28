@@ -21,9 +21,9 @@ export const listGames = async (event: any) => {
   console.log("EVENT\n" + JSON.stringify(event, null, 2))
 
 
-  const s3Services = new S3Services('test-bucket');
-  const buckets = await s3Services.listAllObjects();
-  console.log(JSON.stringify(buckets));
+  // const s3Services = new S3Services('test-bucket');
+  // const buckets = await s3Services.listAllObjects();
+  // console.log(JSON.stringify(buckets));
   
   return [{
     userId: 1,
@@ -31,6 +31,6 @@ export const listGames = async (event: any) => {
     content: "New Game",
     attachment: "SampleLogo.png",
     createdAt: "01-01-2024",
-    isActive: "false",
+    isActive: false,
   }]
 };

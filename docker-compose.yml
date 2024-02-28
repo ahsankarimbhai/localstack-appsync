@@ -7,16 +7,19 @@ services:
     ports:
       - "127.0.0.1:4566:4566"            # LocalStack Gateway
       - "127.0.0.1:4510-4559:4510-4559"  # external services port range
-      # - "127.0.0.1:53:53"                # DNS config (required for Pro)
-      # - "127.0.0.1:53:53/udp"            # DNS config (required for Pro)
-      # - "127.0.0.1:443:443"              # LocalStack HTTPS Gateway (required for Pro)
+      - "127.0.0.1:53:53"                # DNS config (required for Pro)
+      - "127.0.0.1:53:53/udp"            # DNS config (required for Pro)
+      - "127.0.0.1:443:443"              # LocalStack HTTPS Gateway (required for Pro)
     environment:
-      - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=30
-      - DEBUG=0
-      # - LAMBDA_EXECUTOR=docker-reuse
+      - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=60  # 60 seconds timeout for lambda startup
+      - LAMBDA_KEEPALIVE_MS=1200000        # Keep lambdas alive for 20 mins
+      - DEBUG=1
       - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN-}  # required for Pro
+      # - DNS_SERVER=8.8.8.8
       # - PERSISTENCE=1
+      # - SNAPSHOT_FLUSH_INTERVAL=300
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - LS_LOG=trace
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
