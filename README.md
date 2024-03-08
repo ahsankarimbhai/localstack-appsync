@@ -46,34 +46,15 @@
   3. You will see following response returned:
       ```
         {
-            "data": {
-                "listGames": [
-                    {
-                        "userId": "1",
-                        "gameId": "1",
-                        "content": "New Game",
-                        "attachment": "SampleLogo.png",
-                        "createdAt": "01-01-2024",
-                        "isActive": false
-                    }
-                ]
-            }
+            "__type": "InternalError",
+            "message": "exception while calling apigateway with unknown operation: Traceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/chain.py\", line 166, in handle\n    handler(self, self.context, response)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/handlers.py\", line 27, in __call__\n    router_response = self.router.dispatch(context.request)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/router.py\", line 378, in dispatch\n    return self.dispatcher(request, handler, args)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/dispatcher.py\", line 71, in _dispatch\n    result = endpoint(request, **args)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack_ext/services/cloudfront/provider.py.enc\", line 113, in E\n    def E(request,domain=_A,**A):return forward_distribution_invocation(request=request,distribution_id=C)\n                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack_ext/services/cloudfront/provider.py.enc\", line 89, in forward_distribution_invocation\n    B=request;A=invoke_distribution(distribution_id=distribution_id,request=B);C=Response(response=A.content,status=A.status_code,headers=Headers(dict(A.headers)))\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack_ext/services/cloudfront/provider.py.enc\", line 312, in invoke_distribution\n    E=select_attributes(dict(E),[HEADER_LOCALSTACK_EDGE_URL]);E=CaseInsensitiveDict(E);E['Host']=B;LOG.info(W,H,A,B);C=requests.request(H,A,data=O,headers=E,verify=_F,allow_redirects=_F,timeout=(5,30));LOG.debug(X,C.status_code,A)\n                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/api.py\", line 59, in request\n    return session.request(method=method, url=url, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/sessions.py\", line 575, in request\n    prep = self.prepare_request(req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/sessions.py\", line 486, in prepare_request\n    p.prepare(\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/models.py\", line 368, in prepare\n    self.prepare_url(url, params)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/models.py\", line 445, in prepare_url\n    raise InvalidURL(f\"Invalid URL {url!r}: No host supplied\")\nrequests.exceptions.InvalidURL: Invalid URL 'https:///default/api': No host supplied\n"
         }
       ```
   4. Check localstack docker logs for error and trace dumps
 
   ### Expected Result:
-  Request should be successful with request successfully getting routed with Route53 -> CloudFront -> API Gateway -> AppSync -> Lambda. We should we following response:
- 
-    {
-        "__type": "InternalError",
-        "message": "exception while calling apigateway with unknown operation: Traceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 556, in parse\n    operation, uri_params = self._operation_router.match(request)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/op_router.py\", line 321, in match\n    rule, args = matcher.match(path, method=method, return_rule=True)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/werkzeug/routing/map.py\", line 624, in match\n    raise NotFound() from None\nwerkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/chain.py\", line 166, in handle\n    handler(self, self.context, response)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/handlers/service.py\", line 62, in __call__\n    return self.parse_and_enrich(context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/handlers/service.py\", line 66, in parse_and_enrich\n    operation, instance = parser.parse(context.request)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 171, in wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack/aws/protocol/parser.py\", line 558, in parse\n    raise OperationNotFoundParserError(\nlocalstack.aws.protocol.parser.OperationNotFoundParserError: Unable to find operation for request to service apigateway: POST /api\n"
-    }
-
-
-  ### Actual Result:
-  Correct GraphQL API response should be returned as follows:
-
+    Request should be successful with request successfully getting routed with Route53 -> CloudFront -> API Gateway -> AppSync -> Lambda. Correct GraphQL API response should be returned as follows:
+    ```
         {
             "data": {
                 "listGames": [
@@ -88,9 +69,24 @@
                 ]
             }
         }
+    ```
 
 
-  Also note that above response is also returned when we call the API with APi Gateway URL (for e.g. https;//8s6glhz7gw.execute-api.us-east-1.amazonaws.com/default)
+  ### Actual Result:
+      ```
+        {
+            "__type": "InternalError",
+            "message": "exception while calling apigateway with unknown operation: Traceback (most recent call last):\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/chain.py\", line 166, in handle\n    handler(self, self.context, response)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/gateway/handlers.py\", line 27, in __call__\n    router_response = self.router.dispatch(context.request)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/router.py\", line 378, in dispatch\n    return self.dispatcher(request, handler, args)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/rolo/dispatcher.py\", line 71, in _dispatch\n    result = endpoint(request, **args)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack_ext/services/cloudfront/provider.py.enc\", line 113, in E\n    def E(request,domain=_A,**A):return forward_distribution_invocation(request=request,distribution_id=C)\n                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack_ext/services/cloudfront/provider.py.enc\", line 89, in forward_distribution_invocation\n    B=request;A=invoke_distribution(distribution_id=distribution_id,request=B);C=Response(response=A.content,status=A.status_code,headers=Headers(dict(A.headers)))\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/localstack_ext/services/cloudfront/provider.py.enc\", line 312, in invoke_distribution\n    E=select_attributes(dict(E),[HEADER_LOCALSTACK_EDGE_URL]);E=CaseInsensitiveDict(E);E['Host']=B;LOG.info(W,H,A,B);C=requests.request(H,A,data=O,headers=E,verify=_F,allow_redirects=_F,timeout=(5,30));LOG.debug(X,C.status_code,A)\n                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/api.py\", line 59, in request\n    return session.request(method=method, url=url, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/sessions.py\", line 575, in request\n    prep = self.prepare_request(req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/sessions.py\", line 486, in prepare_request\n    p.prepare(\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/models.py\", line 368, in prepare\n    self.prepare_url(url, params)\n  File \"/opt/code/localstack/.venv/lib/python3.11/site-packages/requests/models.py\", line 445, in prepare_url\n    raise InvalidURL(f\"Invalid URL {url!r}: No host supplied\")\nrequests.exceptions.InvalidURL: Invalid URL 'https:///default/api': No host supplied\n"
+        }
+        ```
+
+
+  Also note that above response is also returned when we call the API with CloudFront URL directly (for e.g. https://cbc39fc5.cloudfront.localhost.localstack.cloud/api)
+
+  So it looks like there is some issue with CloudFront not correctly passing the URL to call API gateway. The error says: 
+  `requests.exceptions.InvalidURL: Invalid URL \'https:///default/api\': No host supplied"}`
+
+  The URL should have been `https://8w2qtglsa9.execute-api.us-east-1.amazonaws.com/default/api`. For some reason CloudFront is not adding `Domain Name` specified in the distribution config.
 
   ## Remarks:
 
