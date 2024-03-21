@@ -34,7 +34,7 @@
 
   1. Make following GraphQL API call using Postman (or some other client):
       ```
-      URL: https://localstack-posaas.localpostureservice.name/api
+      URL: https://localstack-posaas.mypostureservice.name/api
       Headers: {
         Authorization: sample,
         Content-Type: application/json
@@ -100,4 +100,4 @@
       awslocal s3 cp /tmp/hello.txt s3://mybucket/hello.txt --acl public-read
       ```
   2. Use following CURL command to get S3 object:
-      `curl -k https://localstack-posaas.localpostureservice.name/mybucket-ahsanb/hello.txt`
+      `curl -k https://localstack-posaas.mypostureservice.name/mybucket-ahsanb/hello.txt`

@@ -19,7 +19,7 @@ variable "sandbox_prefix" {
 }
 variable "api_gateway_cert_domain" {
   type    = string
-  default = "localpostureservice.name"
+  default = "mypostureservice.name"
 }
 variable "api_gateway_domain_name" {
   type    = string
@@ -31,7 +31,7 @@ variable "authorizer_api_allowed_client_ids" {
 }
 variable "public_hosted_zone" {
   type    = string
-  default = "localpostureservice.name"
+  default = "mypostureservice.name"
 }
 
 variable "api_gateway_stage_name" {

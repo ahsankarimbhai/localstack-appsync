@@ -17,7 +17,7 @@ provider "template" {
 }
 
 resource "aws_route53_zone" "route53_zone" {
-  name = "localpostureservice.name"
+  name = "mypostureservice.name"
 
   tags = {
     Name = "posaas-route53-zone"
@@ -26,7 +26,7 @@ resource "aws_route53_zone" "route53_zone" {
 }
 
 resource "aws_route53_record" "route53_record" {
-  name    = "localstack-posaas.localpostureservice.name"
+  name    = "localstack-posaas.mypostureservice.name"
   zone_id = aws_route53_zone.route53_zone.zone_id
   type    = "A"
 
@@ -38,7 +38,7 @@ resource "aws_route53_record" "route53_record" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name       = "localpostureservice.name"
+  domain_name       = "mypostureservice.name"
   validation_method = "DNS"
 
   tags = {
@@ -93,7 +93,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     prefix          = "myprefix"
   }
 
-  aliases = ["localstack-posaas.localpostureservice.name"]
+  aliases = ["localstack-posaas.mypostureservice.name"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
